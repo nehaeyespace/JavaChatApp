@@ -1,0 +1,28 @@
+{
+    "java.project.sourcePaths": ["src"],
+    "java.project.outputPath": "bin",
+    "java.project.referencedLibraries": [
+        "lib/**/*.jar",
+        "/Library/**/*.jar",
+        "/Users/neha/Downloads/mysql-connector-java-8.0.27/mysql-connector-java-8.0.27.jar"
+    ],
+    "dataworkspace.excludedProjects": [
+        "bin/Registration/Registration.sqlproj",
+        "src/Registration/Registration.sqlproj"
+    ],
+    "sqltools.connections": [
+        {
+            "mysqlOptions": {
+                "authProtocol": "default"
+            },
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 3306,
+            "driver": "MySQL",
+            "name": "Registration",
+            "database": "STUDENTS",
+            "username": "root",
+            "password": "Nauni@9593"
+        }
+    ]
+}
