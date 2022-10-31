@@ -154,7 +154,7 @@ class Form extends JFrame implements ActionListener, java.awt.event.ActionListen
             df2 = new SimpleDateFormat("MM");
             df3 = new SimpleDateFormat("YYYY");
             //String requiredDate = df.format(new Date()).toString();
-            System.out.println();
+            // System.out.println();
             // date.setText(date.getSelectedItem());
             // month.setText(month.getSelectedItem());
             // year.setText(year.getSelectedItem());

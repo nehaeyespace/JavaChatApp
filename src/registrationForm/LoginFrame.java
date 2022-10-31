@@ -104,7 +104,10 @@ public class LoginFrame extends JFrame implements ActionListener {
             boolean result = conn.readfromconnection(userText, pwdText);
             if(result == true){
                 System.out.println("FOUND");
-
+                JOptionPane.showMessageDialog(
+                    container, 
+                    "The user is registered. Moving to the Chat Dashboard"
+                );
                 //some kind of establishing the client socket and server socket 
                 //leading to dashboard
                 container.removeAll();
@@ -130,6 +133,13 @@ public class LoginFrame extends JFrame implements ActionListener {
                 //else have not registered
                 //else forgot the details
                 System.out.println("DID NOT FIND");
+                JOptionPane.showMessageDialog(
+                    container, 
+                    "The user is not registered",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE
+                );
+
             }
         }
                 

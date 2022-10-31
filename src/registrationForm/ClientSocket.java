@@ -7,6 +7,8 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.Scanner;
 
+import com.mysql.cj.interceptors.QueryInterceptor;
+
 
 public class ClientSocket implements Disconnector{
   private static final boolean def = false;
@@ -14,29 +16,14 @@ public class ClientSocket implements Disconnector{
     private static Socket socket;
     private static ObjectOutputStream objectStream = null;
     private Scanner scanner;
+    Protocol p;
 
     private static boolean isAlived;
     public ClientSocket(){
-        scanner = new Scanner(System.in);
+        scanner = new Scanner(DashboardFrame.userText);
     }
 
     public void start(){
-        connect();
-        if(socket != null) {
-            runReceiver();
-            try {
-                play();
-            }catch(IOException e){
-                e.printStackTrace();
-            }
-        }
-    }
-
-    private void runReceiver(){
-        new Thread(new ClientReceiver(socket,this)).start();
-    }
-
-    public static void connect(){
         final String ipAddress;
         final int port;
         if(def){
@@ -54,7 +41,6 @@ public class ClientSocket implements Disconnector{
         try {
             socket = new Socket(ipAddress, port);
             System.out.println("Server is connected..");
-
             isAlived = true;
             objectStream = new ObjectOutputStream(new BufferedOutputStream(socket.getOutputStream()));
 
@@ -63,32 +49,40 @@ public class ClientSocket implements Disconnector{
         }
     }
 
-    private void play() throws IOException{
-
-        System.out.println("Please set a nickname.");
-        System.out.print(">>");
-        String nick = scanner.next();
-        Protocol p = new Protocol(nick);
-
-        System.out.println("Start chatting. To quit \"exit\" please enter exit!");
-        for(;isAlived;){
-            String message = scanner.nextLine();
-
-            p.setMessage(message);
-
-            objectStream.writeObject(p);
-            objectStream.reset();
-            objectStream.flush();
-
-            if(message.equals("exit")){
-                isAlived = false;
-            }
+    public void setNickName(){
+        if(socket != null) {
+            runReceiver();
+            System.out.println("Please set a nickname.");
+            System.out.print(">>");
+            String nick = DashboardFrame.getNickname();
+            p = new Protocol(nick);
+            System.out.println("Start chatting. To quit \"exit\" please enter exit!");
         }
-        System.out.println("Please enter the chat input has ended..");
-        disconnect();
     }
 
-    private void close(){
+    private void runReceiver(){
+        new Thread(new ClientReceiver(socket,this)).start();
+    }
+
+    public static void setMes(Protocol p, String text){
+        if(!text.equals("quit")){
+            System.out.println("SetMes() text: "+text);
+            p.setMessage(text);
+            try {
+                objectStream.writeObject(p);
+                objectStream.reset();
+                objectStream.flush();
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+        else{
+            System.out.println("Quit entered. The chat input has ended..");
+        }                
+    }
+
+    static void close(){
         try {
             objectStream.close();
             System.out.println("ObjectOutputStream close completed");
@@ -98,6 +92,25 @@ public class ClientSocket implements Disconnector{
     }
 
     @Override
-    public void disconnect() { close(); }
+    public void disconnect() {
+        // TODO Auto-generated method stub
+        
+    }
+
+    public void setIsAliveFalse() {
+        isAlived = false;
+    }
+
+    public boolean checkIsAlive(boolean isAlive){
+        if(isAlive) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public void sendText(String text) {
+        setMes(p, text);
+    }
 
 }

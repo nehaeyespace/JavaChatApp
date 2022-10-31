@@ -10,7 +10,7 @@ public class ClientReceiver implements Runnable{
   
   private Socket socket;
 
-    private BufferedReader br;
+    private static BufferedReader br;
 
     private Disconnector dis;
 
@@ -22,24 +22,15 @@ public class ClientReceiver implements Runnable{
     @Override
     public void run() {
         createStream();
-
-        String message;
-        try {
-            for(;(message = br.readLine()) != null;){
-                if(message.equals("disconnect")){
-                    System.out.println("The connection to the server has been safely terminated..");
-                    dis.disconnect();
-                    break;
-                }else {
-                    System.out.print(">>");
-                    System.out.println(message);
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+        if(DashboardFrame.getText().equals("quit")){
+            System.out.println("Chat output has ended.");
+            System.out.println("The connection to the server has been safely terminated..");
+            dis.disconnect();
+        }else {
+            System.out.print(">>");
+            System.out.println("Clientreceiver () : "+DashboardFrame.getText());
+            DashboardFrame.setMessage("");
         }
-        close();
-        System.out.println("Chat output has ended.");
     }
 
     private void createStream(){
@@ -50,7 +41,7 @@ public class ClientReceiver implements Runnable{
         }
     }
 
-    private void close(){
+    static void close(){
         try {
             br.close();
             System.out.println("BufferedReader close complete");

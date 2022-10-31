@@ -50,13 +50,13 @@ public class ServerReceiver implements Runnable{
                     break;
                 } else if(!message.isEmpty()){
                     nickName = p.nickName;
-                    message = String.format("[%s]: %s has left.", nickName, message);
+                    message = String.format("[%s]: %s", nickName, message);
                     System.out.println(message);
                     server.broadcast(message);
                 }
               }
               close();
-        }  catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
